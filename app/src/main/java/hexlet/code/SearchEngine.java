@@ -1,9 +1,6 @@
 package hexlet.code;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,22 +14,34 @@ public class SearchEngine {
             return new ArrayList<>();
         }
 
-        docs.stream()
-                .filter(map -> find(map, text))
-                .forEach(map -> result.add(map.get("id")));
+        Map<Integer, String> sorted = new HashMap<>();
+        for (Map<String, String> map : docs) {
+            if (!find(map, text).isEmpty()) {
+                sorted.putAll(find(map, text));
+            }
+        }
+        sorted.keySet()
+                .stream()
+                .sorted(((o1, o2) -> o2.compareTo(o1)))
+                .forEach(k -> result.add(sorted.get(k)));
+
         return result;
     }
 
-    private static boolean find(Map<String, String> doc, String text) {
-        boolean result = false;
+    private static Map<Integer, String> find(Map<String, String> doc, String text) {
+        Map<Integer, String> result = new HashMap<>();
         String[] words = doc.get("text").split(" ");
+        int count = 0;
 
         String actual = normalizeWord(text);
         for (String word : words) {
             String excepted = normalizeWord(word);
             if (excepted.equals(actual)) {
-                result = true;
+                count++;
             }
+        }
+        if (count != 0) {
+            result.put(count, doc.get("id"));
         }
         return result;
     }
