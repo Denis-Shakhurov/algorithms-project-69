@@ -1,6 +1,7 @@
 plugins {
-    id("java")
     application
+    checkstyle
+    jacoco
 }
 
 group = "hexlet.code"
@@ -15,6 +16,17 @@ dependencies {
     testImplementation("org.junit.jupiter:junit-jupiter")
 }
 
+application {
+    mainClass.set("hexlet.code.App")
+}
+
 tasks.test {
     useJUnitPlatform()
 }
+
+jacoco {
+    toolVersion = "0.8.11"
+    reportsDirectory = layout.buildDirectory.dir("customJacocoReportDir")
+}
+
+tasks.jacocoTestReport { reports { xml.required.set(true) } }
