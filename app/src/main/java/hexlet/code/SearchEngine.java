@@ -1,9 +1,6 @@
 package hexlet.code;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -17,22 +14,26 @@ public class SearchEngine {
             return new ArrayList<>();
         }
 
-        Map<Integer, String> sorted = new HashMap<>();
+        List<Map<String, String>> list = new ArrayList<>();
         for (Map<String, String> map : docs) {
             if (!find(map, text).isEmpty()) {
-                sorted.putAll(find(map, text));
+                list.add(find(map, text));
             }
         }
-        sorted.keySet()
-                .stream()
-                .sorted(((o1, o2) -> o2.compareTo(o1)))
-                .forEach(k -> result.add(sorted.get(k)));
 
+        Collections.sort(list, new Comparator<Map<String, String>>() {
+            @Override
+            public int compare(Map<String, String> o1, Map<String, String> o2) {
+                return Integer.valueOf(o2.get("count")).compareTo(Integer.valueOf(o1.get("count")));
+            }
+        });
+
+        list.forEach(map -> result.add(map.get("name")));
         return result;
     }
 
-    private static Map<Integer, String> find(Map<String, String> doc, String text) {
-        Map<Integer, String> result = new HashMap<>();
+    private static Map<String, String> find(Map<String, String> doc, String text) {
+        Map<String, String> result = new HashMap<>();
         String[] words = doc.get("text").split(" ");
         int count = 0;
 
@@ -44,7 +45,8 @@ public class SearchEngine {
             }
         }
         if (count != 0) {
-            result.put(count, doc.get("id"));
+            result.put("count", String.valueOf(count));
+            result.put("name", doc.get("id"));
         }
         return result;
     }
