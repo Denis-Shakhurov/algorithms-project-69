@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.MatchResult;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class SearchEngine {
 
@@ -20,19 +23,25 @@ public class SearchEngine {
         return result;
     }
 
-    public static boolean find(Map<String, String> doc, String text) {
+    private static boolean find(Map<String, String> doc, String text) {
         boolean result = false;
         String[] words = doc.get("text").split(" ");
 
-        Arrays.asList(words).stream()
-                .filter(w -> w.endsWith("[.,;:!?-]"))
-                .forEach(w -> w.substring(w.length()));
-
+        String actual = normalizeWord(text);
         for (String word : words) {
-            if (word.equals(text)) {
+            String excepted = normalizeWord(word);
+            if (excepted.equals(actual)) {
                 result = true;
             }
         }
         return result;
+    }
+
+    private static String normalizeWord(String word) {
+        return Pattern.compile("\\w+")
+                .matcher(word)
+                .results()
+                .map(MatchResult::group)
+                .collect(Collectors.joining());
     }
 }
