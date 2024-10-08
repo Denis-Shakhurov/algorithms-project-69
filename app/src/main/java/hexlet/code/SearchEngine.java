@@ -1,8 +1,6 @@
 package hexlet.code;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,29 +24,29 @@ public class SearchEngine {
             }
         }
 
-        Collections.sort(list, new Comparator<Map<String, String>>() {
-            @Override
-            public int compare(Map<String, String> o1, Map<String, String> o2) {
-                return Integer.valueOf(o2.get("count")).compareTo(Integer.valueOf(o1.get("count")));
-            }
-        });
+        list.stream()
+                .sorted(((o1, o2) -> o2.get("count").compareTo(o1.get("count"))))
+                .forEach(map -> result.add(map.get("name")));
 
-        list.forEach(map -> result.add(map.get("name")));
         return result;
     }
 
     private static Map<String, String> find(Map<String, String> doc, String text) {
         Map<String, String> result = new HashMap<>();
         String[] words = doc.get("text").split(" ");
+        String[] wordsInText = text.split(" ");
         int count = 0;
 
-        String actual = normalizeWord(text);
-        for (String word : words) {
-            String excepted = normalizeWord(word);
-            if (excepted.equals(actual)) {
-                count++;
+        for (String wordText : wordsInText) {
+            String actual = normalizeWord(wordText);
+            for (String word : words) {
+                String excepted = normalizeWord(word);
+                if (excepted.equals(actual)) {
+                    count++;
+                }
             }
         }
+
         if (count != 0) {
             result.put("count", String.valueOf(count));
             result.put("name", doc.get("id"));
