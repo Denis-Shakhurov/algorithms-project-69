@@ -1,12 +1,6 @@
 package hexlet.code;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.MatchResult;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
+import java.util.*;
 
 public class SearchEngine {
 
@@ -31,6 +25,24 @@ public class SearchEngine {
         return result;
     }
 
+    public static Map<String, List<String>> index(List<Map<String, String>> list) {
+        Map<String, List<String>> result = new HashMap<>();
+        Set<String> set = new HashSet<>();
+        for (Map<String, String> map : list) {
+            String[] words = map.get("text").split(" ");
+            set.addAll(Arrays.stream(words).toList());
+        }
+        for (String word : set) {
+            for (Map<String, String> map : list) {
+                String[] words = map.get("text").split(" ");
+                if (Utils.binarySearch(words, word)) {
+                    result.put(word, search(list, word));
+                }
+            }
+        }
+        return result;
+    }
+
     private static Map<String, String> find(Map<String, String> doc, String text) {
         Map<String, String> result = new HashMap<>();
         String[] words = doc.get("text").split(" ");
@@ -38,9 +50,9 @@ public class SearchEngine {
         int count = 0;
 
         for (String wordText : wordsInText) {
-            String actual = normalizeWord(wordText);
+            String actual = Utils.normalizeWord(wordText);
             for (String word : words) {
-                String excepted = normalizeWord(word);
+                String excepted = Utils.normalizeWord(word);
                 if (excepted.equals(actual)) {
                     count++;
                 }
@@ -52,13 +64,5 @@ public class SearchEngine {
             result.put("name", doc.get("id"));
         }
         return result;
-    }
-
-    private static String normalizeWord(String word) {
-        return Pattern.compile("\\w+")
-                .matcher(word)
-                .results()
-                .map(MatchResult::group)
-                .collect(Collectors.joining());
     }
 }
