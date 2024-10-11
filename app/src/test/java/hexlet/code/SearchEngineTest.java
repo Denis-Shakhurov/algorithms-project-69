@@ -22,10 +22,10 @@ public class SearchEngineTest {
         );
 
         List<String> expected = List.of("doc2", "doc1");
-        List<String> actual = SearchEngine.search(docs, "shoot");
+        List<String> actual = SearchEngine.getSearch(docs, "shoot");
 
         assertEquals(expected, actual);
-        List<String> actualNull = SearchEngine.search(new ArrayList<Map<String, String>>(), "ol");
+        List<String> actualNull = SearchEngine.getSearch(new ArrayList<Map<String, String>>(), "ol");
         assertEquals(new ArrayList<>(), actualNull);
     }
 
