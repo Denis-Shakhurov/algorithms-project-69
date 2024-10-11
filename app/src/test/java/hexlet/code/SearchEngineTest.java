@@ -30,19 +30,31 @@ public class SearchEngineTest {
     }
 
     @Test
-    public void testMultiWordSearch() {
-        var doc1 = "I can't shoot straight unless I've had a pint!";
-        var doc2 = "Don't shoot shoot shoot that thing at me.";
-        var doc3 = "I'm your shooter.";
+    public void testFindDoc() {
+        String doc1 = "Don't shoot shoot shoot that thing at me.";
+        Map<String, String> map = Map.of("id", "doc1", "text", doc1);
 
+        Map<String, String> result = SearchEngine.findDoc(map, "shoot");
+        int expected = 3;
+        int actual = Integer.parseInt(result.get("count"));
+
+        assertEquals(expected, actual);
+    }
+
+    @Test
+    public void testGetIndex() {
         List<Map<String, String>> docs = List.of(
-                Map.of("id", "doc1", "text", doc1),
-                Map.of("id", "doc2", "text", doc2),
-                Map.of("id", "doc3", "text", doc3)
+                Map.of("id", "doc1", "text", "some text"),
+                Map.of("id", "doc2", "text", "some text too")
         );
 
-        List<String> expected = List.of("doc2", "doc1");
-        List<String> actual = SearchEngine.search(docs, "shoot at me");
+        Map<String, List<String>> expected = Map.of(
+                "some", List.of("doc1", "doc2"),
+                "text", List.of("doc1", "doc2"),
+                "too", List.of("doc2")
+        );
+
+        Map<String, List<String>> actual = SearchEngine.getIndex(docs);
 
         assertEquals(expected, actual);
     }
