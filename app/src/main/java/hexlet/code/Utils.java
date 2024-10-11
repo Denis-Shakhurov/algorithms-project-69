@@ -1,6 +1,7 @@
 package hexlet.code;
 
 import java.util.Arrays;
+import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -33,5 +34,11 @@ public class Utils {
             }
         }
         return false;
+    }
+
+    public static String[] docToArray(Map<String, String> doc) {
+        String[] result = doc.get("text").split(" ");
+        Arrays.stream(result).forEach(Utils::normalizeWord);
+        return result;
     }
 }

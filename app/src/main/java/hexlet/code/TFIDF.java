@@ -37,8 +37,7 @@ public class TFIDF {
                                            Map<String, String> doc,
                                            Map<String, List<String>> index,
                                            String text) {
-        String[] words = text.split(" ");
-        Arrays.stream(words).forEach(Utils::normalizeWord);
+        String[] words = Utils.docToArray(doc);
 
         double result = 0;
         for (String word : words) {
@@ -57,8 +56,7 @@ public class TFIDF {
     }
 
     public static double getTF(Map<String, String> doc, String word) {
-        String[] words = doc.get("text").split(" ");
-        Arrays.stream(words).forEach(Utils::normalizeWord);
+        String[] words = Utils.docToArray(doc);
 
         int count = (int) Arrays.stream(words)
                 .filter(w -> w.equals(word))
