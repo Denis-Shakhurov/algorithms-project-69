@@ -1,6 +1,7 @@
 package hexlet.code;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.MatchResult;
 import java.util.regex.Pattern;
@@ -40,5 +41,11 @@ public class Utils {
         String[] result = doc.get("text").split(" ");
         Arrays.stream(result).forEach(Utils::normalizeWord);
         return result;
+    }
+
+    public static List<String> getSplittedText(String text) {
+        return Arrays.stream(text.toLowerCase().split("\\s+|\\p{Punct}"))
+                .map(Utils::normalizeWord)
+                .toList();
     }
 }
