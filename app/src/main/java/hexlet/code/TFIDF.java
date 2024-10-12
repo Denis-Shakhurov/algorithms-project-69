@@ -16,11 +16,11 @@ public class TFIDF {
         }
 
         List<Map<String, Double>> docScores = new ArrayList<>();
-            for (Map<String, String> doc : docs) {
-                String docId = doc.get("id");
-                double score = getSentenceTFIDF(docs, doc, index, sentence);
-                docScores.add(Map.of(docId, score));
-            }
+        for (Map<String, String> doc : docs) {
+            String docId = doc.get("id");
+            double score = getSentenceTFIDF(docs, doc, index, sentence);
+            docScores.add(Map.of(docId, score));
+        }
 
         Comparator<Map<String, Double>> byDoubleCount;
         byDoubleCount = Comparator.comparingDouble(m -> m.entrySet().iterator().next().getValue());
